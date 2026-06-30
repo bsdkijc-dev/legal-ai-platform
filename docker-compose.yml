@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # SERVICE 1: CORE LEGAL AI BACKEND APPLICATION
+  # ----------------------------------------------------------------------------
+  api_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    container_name: legal_ai_api_container
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - REDIS_HOST=state_cache_db
+      - REDIS_PORT=6379
+      - VALID_SECRET_TOKEN=${VALID_SECRET_TOKEN:?set VALID_SECRET_TOKEN in .env}
+    depends_on:
+      - state_cache_db
+    networks:
+      - legal_ai_network
+
+  # ----------------------------------------------------------------------------
+  # SERVICE 2: REDIS IN-MEMORY STATE & CACHING DATABASE
+  # ----------------------------------------------------------------------------
+  state_cache_db:
+    image: redis:7.0-alpine
+    container_name: legal_ai_redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_state_data:/data
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:?set REDIS_PASSWORD in .env}
+    networks:
+      - legal_ai_network
+
+# --- INFRASTRUCTURE CONFIGURATIONS ---
+volumes:
+  redis_state_data:
+    driver: local
+
+networks:
+  legal_ai_network:
+    driver: bridge

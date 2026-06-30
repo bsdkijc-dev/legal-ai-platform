@@ -1,0 +1,46 @@
+# ==============================================================================
+# STAGE 1: BUILDER LAYER (Kompilasi Dependensi)
+# ==============================================================================
+FROM python:3.10-slim AS builder
+
+WORKDIR /app
+
+# Atur environment agar Python tidak menulis file .pyc ke dalam disk
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Instal paket sistem yang dibutuhkan untuk kompilasi beberapa pustaka C
+RUN apt-get update && apt-get install -y --no-install-recommends     build-essential     && rm -rf /var/lib/apt/lists/*
+
+# Salin manifes kebutuhan library backend
+COPY requirements.txt .
+
+# Kompilasi dan unduh wheels pustaka pihak ketiga ke dalam folder lokal
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# ==============================================================================
+# STAGE 2: FINAL PRODUCTION RUNTIME (Layer Ringan Siap Rilis)
+# ==============================================================================
+FROM python:3.10-slim AS runner
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8000
+
+# Menyalin pustaka terkompilasi dari builder stage terdahulu
+COPY --from=builder /root/.local /root/.local
+COPY --from=builder /app/requirements.txt .
+
+# Pastikan binary path local python terikat ke environment variable global
+ENV PATH=/root/.local/bin:$PATH
+
+# Salin seluruh modul kode aplikasi FastAPI yang sudah solid (Fase 3 & FASE 4)
+COPY . .
+
+# Membuka jalur komunikasi lalu lintas jaringan kontainer (Default: 8000)
+EXPOSE 8000
+
+# Menjalankan Server Uvicorn Produksi dengan optimasi worker pekerja
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
