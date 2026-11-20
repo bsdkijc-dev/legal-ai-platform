@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Legal AI Platform (deployment configuration)"
+authors:
+  - family-names: "Mustafa"
+    given-names: "Cecep"
+    orcid: "https://orcid.org/0000-0003-0037-497X"
+    affiliation: "Indonesian Judicial College (IJC)"
+abstract: "Docker Compose deployment configuration for a legal AI API backend with a Redis state cache."
+repository-code: "https://github.com/bsdkijc-dev/legal-ai-platform"
+license: MIT
+keywords: [Indonesia, legal AI, Docker, deployment]
