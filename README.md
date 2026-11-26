@@ -1,4 +1,18 @@
-# Legal AI Platform (deployment configuration)
+<div align="center">
+
+<img src="assets/logo.png" alt="Legal AI Platform Logo" width="140">
+
+# Legal AI Platform
+
+### Docker Compose deployment stack for a legal AI API backend and Redis state cache.
+
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE) ![Stack](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+
+[Documentation](docker-compose.yml) · [Repository](https://github.com/bsdkijc-dev/legal-ai-platform)
+
+</div>
+
+---
 
 Docker Compose setup for a legal AI API backend (`api_backend`, port 8000) and a Redis state cache (`state_cache_db`).
 
@@ -23,3 +37,13 @@ GitHub also shows a "Cite this repository" button, built from `CITATION.cff`.
 ## Licence
 
 MIT (code and configuration). See `LICENSE`.
+
+---
+
+<div align="center">
+
+**Legal AI Platform**
+
+[github.com/bsdkijc-dev/legal-ai-platform](https://github.com/bsdkijc-dev/legal-ai-platform)
+
+</div>
